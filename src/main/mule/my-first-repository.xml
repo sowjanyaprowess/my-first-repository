@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="bf88f7e8-e968-40cd-81d9-ab8616ef97b6" >
+		<http:listener-connection host="0.0.0.0" port="4043" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="24064194-e739-40df-8262-2490a2cf612b" >
+		<file:connection workingDir="C:\Users\91797\Desktop\MULESOFT\POC-1-Filtering File records\POC-1-Filtering File records(Rajesh)\" />
+	</file:config>
+	<flow name="my-first-repositoryFlow" doc:id="f77634e7-92be-4197-a66b-346fb79c1152" >
+		<http:listener doc:name="Listener" doc:id="640aab06-cea2-4a89-86bd-f264e86b94fc" config-ref="HTTP_Listener_config" path="/repo"/>
+		<file:read doc:name="read-csv-file" doc:id="f6f52772-a201-489e-9e02-8a59e1b30e10" config-ref="File_Config" path="CountryOrderfile_POC1.csv"/>
+		<ee:transform doc:name="payload-to- json" doc:id="555922db-4087-4c53-8ef9-f7889690d8d8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0ff23da1-a7c6-4622-8b32-c27b702392c0" message='#["print the payload"]'/>
+	</flow>
+</mule>
